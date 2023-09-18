@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Work Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.2
 // @description  try to take over the world!
 // @author       You
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tampermonkey.net
@@ -128,7 +128,7 @@
 
     document.body.addEventListener('keydown', function(e) {
 
-        if( e.key === "d") {
+        if( e.code === "KeyD") {
             if(waitingKey) {
                 redirectMapping[location.host]?.()
             }else {
