@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Work Enhancer
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  try to take over the world!
 // @author       You
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tampermonkey.net
@@ -211,7 +211,7 @@
         const checkbox = document.createElement("input")
         checkbox.type = "checkbox"
         const label = document.createElement("label")
-        label.innerText = "只显示我的"
+        label.innerText = "高亮我的"
         const attach = document.querySelector("#attachmentmodule")
         const wrapper = document.createElement("div")
         wrapper.insertAdjacentElement("beforeend", label)
@@ -219,12 +219,11 @@
 
         attach.insertAdjacentElement("afterend", wrapper)
 
-        const hide = function (e) {
-            e.style.position = 'fixed'
-            e.style.top = '-999px'
+        const fade = function (e) {
+            e.style.opacity = 0.1
         }
-        const show = function(e) {
-            e.style.position = 'static'
+        const defade = function(e) {
+            delete e.style.opacity
         }
         checkbox.onchange = function() {
             const rows = document.querySelectorAll("issuetable-web-component table tbody tr");
@@ -234,9 +233,9 @@
                 const assignee = ele.querySelector(".assignee")
                 if(!assignee.innerText.includes(username)){
                     if(this.checked) {
-                       hide(ele)
+                       fade(ele)
                     }else {
-                       show(ele)
+                       defade(ele)
                     }
                 }
             })
