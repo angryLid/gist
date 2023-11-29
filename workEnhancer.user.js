@@ -8,24 +8,42 @@
 // @grant        GM_openInTab
 // @grant        GM_addStyle
 // @match        http://qa-yapi.xsl.link/*
-// @match        https://jira.xingshulin.com/*
 // @match        https://lanhuapp.com/*
-// @match        https://code.xingshulin.com/*
 // @match        https://xingshulin.worktile.com/*
-// @match        https://qa-xhcp.xingshulin.com/*
-
+// @match        https://*.xingshulin.com/*
 // ==/UserScript==
 
 (function () {
     "use strict";
-    if(location.href.includes("qa-xhcp.xingshulin.com")){
-        window.addEventListener("keydown", (event) => {
-            const { ctrlKey, shiftKey, code, metaKey } = event
-            if ((metaKey || ctrlKey) && shiftKey && code === "Digit2") {
-                GM_openInTab (location.href.replace("https://qa-xhcp.xingshulin.com/apps", "http://localhost:3000"));
+
+    registerRedirection();
+
+    function registerRedirection() {
+        const filter = [
+            {
+                condition: () => location.href.includes("qa-xhcp.xingshulin.com"),
+                action: () => GM_openInTab (location.href.replace("https://qa-xhcp.xingshulin.com/apps", "http://localhost:3000"))
+            },
+            {
+                condition: () => location.href.includes("qa-bm.xingshulin.com"),
+                action: () => GM_openInTab (location.href.replace("https://qa-bm.xingshulin.com", "http://localhost:7889"))
+
             }
-        })
+        ]
+
+        for(const f of filter){
+            if(f.condition()){
+                window.addEventListener("keydown", (event) => {
+                    const { ctrlKey, shiftKey, code, metaKey } = event
+                    if ((metaKey || ctrlKey) && shiftKey && code === "Digit2") {
+                        f.action()
+                    }
+                })
+                break;
+            }
+        }
     }
+
     const config = {
         fontFamily: "Cascadia Code",
     }
@@ -211,7 +229,7 @@
         const checkbox = document.createElement("input")
         checkbox.type = "checkbox"
         const label = document.createElement("label")
-        label.innerText = "高亮我的"
+        label.innerText = "只显示我的"
         const attach = document.querySelector("#attachmentmodule")
         const wrapper = document.createElement("div")
         wrapper.insertAdjacentElement("beforeend", label)
@@ -219,11 +237,12 @@
 
         attach.insertAdjacentElement("afterend", wrapper)
 
-        const fade = function (e) {
-            e.style.opacity = 0.1
+        const hide = function (e) {
+            e.style.position = 'fixed'
+            e.style.top = '-999px'
         }
-        const defade = function(e) {
-            delete e.style.opacity
+        const show = function(e) {
+            e.style.position = 'static'
         }
         checkbox.onchange = function() {
             const rows = document.querySelectorAll("issuetable-web-component table tbody tr");
@@ -233,9 +252,9 @@
                 const assignee = ele.querySelector(".assignee")
                 if(!assignee.innerText.includes(username)){
                     if(this.checked) {
-                       fade(ele)
+                        hide(ele)
                     }else {
-                       defade(ele)
+                        show(ele)
                     }
                 }
             })
