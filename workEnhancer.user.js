@@ -12,6 +12,7 @@
 // @match        https://xingshulin.worktile.com/*
 // @match        https://*.xingshulin.com/*
 // @match        http://localhost:3000/*
+// @match        http://localhost:5173/*
 // ==/UserScript==
 
 (function () {
@@ -25,16 +26,16 @@
                 GM_openInTab(
                     location.href.replace(
                         "https://qa-xhcp.xingshulin.com/apps",
-                        "http://localhost:3000",
+                        "http://localhost:5173",
                     ),
                 ),
             },
             {
-                condition: () => location.href.startsWith("http://localhost:3000"),
+                condition: () => location.href.startsWith("http://localhost:5173"),
                 action: () =>
                 GM_openInTab(
                     location.href.replace(
-                        "http://localhost:3000",
+                        "http://localhost:5173",
                         "https://qa-xhcp.xingshulin.com/apps",
                     ),
                 ),
